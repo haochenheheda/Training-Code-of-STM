@@ -74,7 +74,7 @@ python eval.py -g 0 -s val -y 17 -D ../data/davis -p ../davis_weights/davis_yout
 ```
 
 demo video
-https://user-images.githubusercontent.com/19390123/115357395-3007b800-a1ef-11eb-83ca-46ac222bebfe.mp4
+![video](https://user-images.githubusercontent.com/19390123/115357395-3007b800-a1ef-11eb-83ca-46ac222bebfe.mp4)
 
 ## Performance&Weights
 

@@ -65,6 +65,7 @@ python train_davis.py -Ddavis "path to davis" -Dyoutube "path to youtube-vos" -s
 Evaluating on Davis 2017&2016 val set.
 ```
 python eval.py -g "num of gpus" -s "set" -y "year" -D "path to davis" -p "path to weights"
+python eval.py -g 0 -s val -y 17 -D ../data/davis -p ../weights/xx.pth
 ```
 
 ## Performance&Weights

@@ -1,5 +1,6 @@
 # STM_training
 This repository fully reproduces [Space-Time Memory Networks](https://openaccess.thecvf.com/content_ICCV_2019/html/Oh_Video_Object_Segmentation_Using_Space-Time_Memory_Networks_ICCV_2019_paper.html)
+![image](https://user-images.githubusercontent.com/19390123/115352733-495a3580-a1ea-11eb-9fed-483cac699682.png)
 
 ## Introduction
 
@@ -21,8 +22,9 @@ We use MS-COCO's instance segmentation part to generate pseudo video sequence. S
 ```
 python dataset/coco.py -Ddavis "path to davis" -Dcoco "path to coco" -o "path to output dir"
 ```
-![coco_processed_images](demo/00000.jpg)
-![coco_processed_images](demo/00002.jpg)
+![image](https://user-images.githubusercontent.com/19390123/115352832-62fb7d00-a1ea-11eb-9fbe-1f84bf74905d.png)
+![image](https://user-images.githubusercontent.com/19390123/115352873-6c84e500-a1ea-11eb-96ba-2bd87a726d4f.png)
+
 
 
 #### [DAVIS](https://davischallenge.org/)

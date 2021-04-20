@@ -75,11 +75,11 @@ python eval.py -g 0 -s val -y 17 -D ../data/davis -p ../davis_weights/davis_yout
 
 ## Performance&Weights
 
-|  | backbone |  training stage | dataset | J&F | J |  F  | model |
+|  | backbone |  training stage | training dataset | J&F | J |  F  | model |
 | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
 | Ours| resnet-50 |  stage 1 | MS-COCO | 69.5 | 67.8 | 71.2 | xx |
-| Origin | resnet-50 | stage 2 | Davis&Youtube-vos | 81.8 | 79.2 | 84.3 | [`link`](https://github.com/seoungwugoh/STM) |
-| Ours| resnet-50 | stage 2 | Davis&Youtube-vos | 82.0 | 79.7 | 84.4 | xx |
+| Origin | resnet-50 | stage 2 | MS-COCO -> Davis&Youtube-vos | 81.8 | 79.2 | 84.3 | [`link`](https://github.com/seoungwugoh/STM) |
+| Ours| resnet-50 | stage 2 | MS-COCO -> Davis&Youtube-vos | 82.0 | 79.7 | 84.4 | xx |
 
 ## Notes
 - STM is an attention-based implicit matching architecture, which needs large amounts of data for training. The first stage of training is necessary if you want to get better results.

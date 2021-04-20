@@ -87,6 +87,8 @@ python eval.py -g 0 -s val -y 17 -D ../data/davis -p ../davis_weights/davis_yout
 - Training takes about three days on a single NVIDIA 2080Ti. There is no log during training, you could add logs if you need. 
 - Due to time constraints, the code is a bit messy and need to be optimized. Questions and suggestions are welcome.
 
+## Acknowledgement
+This codebase borrows the code and structure from [official STM repository](https://github.com/seoungwugoh/STM)
 ## Citing STM
 ```
 @inproceedings{oh2019video,

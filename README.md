@@ -74,7 +74,7 @@ python eval.py -g 0 -s val -y 17 -D ../data/davis -p ../davis_weights/davis_yout
 ```
 
 
-## Performance&Weights
+## Performance on Davis17&Weights
 
 |  | backbone |  training stage | training dataset | J&F | J |  F  | model |
 | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |

@@ -52,11 +52,11 @@ python train_davis.py -Ddavis "path to davis" -Dyoutube "path to youtube-vos" -s
 ```
 ## Performance&Weights
 
-|  | backbone |  training stage | J&F | J |  F  | model |
-| ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
-| Ours| resnet-50 |  stage 1 | 69.5 | 67.8 | 71.2 | xx |
-| Origin | resnet-50 | stage 2 | 81.8 | 79.2 | 84.3 | [`link`](https://github.com/seoungwugoh/STM) |
-| Ours| resnet-50 | stage 2 | 82.0 | 79.7 | 84.4 | xx |
+|  | backbone |  training stage | dataset | J&F | J |  F  | model |
+| ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
+| Ours| resnet-50 |  stage 1 | MS-COCO | 69.5 | 67.8 | 71.2 | xx |
+| Origin | resnet-50 | stage 2 | Davis&Youtube-vos | 81.8 | 79.2 | 84.3 | [`link`](https://github.com/seoungwugoh/STM) |
+| Ours| resnet-50 | stage 2 | Davis&Youtube-vos | 82.0 | 79.7 | 84.4 | xx |
 
 ## Notes
 

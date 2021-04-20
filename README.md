@@ -21,8 +21,8 @@ We use MS-COCO's instance segmentation part to generate pseudo video sequence. S
 ```
 python dataset/coco.py -Ddavis "path to davis" -Dcoco "path to coco" -o "path to output dir"
 ```
-[coco_processed_images](demo/00000.jpg)
-[coco_processed_images](demo/00001.jpg)
+![coco_processed_images](demo/00000.jpg)
+![coco_processed_images](demo/00001.jpg)
 
 
 #### [DAVIS](https://davischallenge.org/)

@@ -53,19 +53,24 @@ python dataset/coco.py -Ddavis "path to davis" -Dcoco "path to coco" -o "path to
 Pretraining on MS-COCO.
 ```
 python train_coco.py -Ddavis "path to davis" -Dcoco "path to coco" -save "path to checkpoints"
+#e.g.
+python train_coco.py -Ddavis ../data/Davis/ -Dcoco ../data/Ms-COCO/ -save ../coco_weights/
 ```
 
 #### Stage 2
 Training on Davis&Youtube-vos.
 ```
 python train_davis.py -Ddavis "path to davis" -Dyoutube "path to youtube-vos" -save "path to checkpoints" -resume "path to coco pretrained weights"
+#e.g. 
+train_davis.py -Ddavis ../data/Davis/ -Dyoutube ../data/Youtube-vos/ -save ../davis_weights/ -resume ../coco_weights/coco_pretrained_resnet50_679999.pth
 ```
 
 ## Evaluation
 Evaluating on Davis 2017&2016 val set.
 ```
 python eval.py -g "num of gpus" -s "set" -y "year" -D "path to davis" -p "path to weights"
-python eval.py -g 0 -s val -y 17 -D ../data/davis -p ../weights/xx.pth
+#e.g.
+python eval.py -g 0 -s val -y 17 -D ../data/davis -p ../davis_weights/davis_youtube_resnet50_799999.pth
 ```
 
 ## Performance&Weights

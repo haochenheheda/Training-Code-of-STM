@@ -83,7 +83,7 @@ python eval.py -g 0 -s val -y 17 -D ../data/davis -p ../davis_weights/davis_yout
 
 ## Notes
 - STM is an attention-based implicit matching architecture, which needs large amounts of data for training. The first stage of training is necessary if you want to get better results.
-- Training takes about three days on a single NVIDIA 2080Ti. There is no log during training stage, you could add logs at your wish. 
+- Training takes about three days on a single NVIDIA 2080Ti. There is no log during training, you could add logs if you need. 
 - Due to time constraints, the code is a bit messy. Questions are welcome.
 
 ## Citing STM

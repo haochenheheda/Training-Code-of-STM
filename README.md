@@ -39,6 +39,17 @@ This repository fully reproduces this work: [Space-Time Memory Networks](https:/
 
 ## Training
 
+#### Stage 1
+Pretraining on MS-COCO
+```
+python train_coco.py -Ddavis "path to davis" -Dcoco "path to coco" -save "path to checkpoints"
+```
+
+#### Stage 2
+Training on Davis&Youtube-vos
+```
+python train_davis.py -Ddavis "path to davis" -Dyoutube "path to youtube-vos" -save "path to checkpoints" -resume "path to coco pretrained weights"
+```
 ## Performance&Weights
 
 |  | backbone |  training stage | J&F | J |  F  | model |

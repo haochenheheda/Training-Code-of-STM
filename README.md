@@ -1,6 +1,6 @@
 # Training-code-of-STM
 This repository fully reproduces [Space-Time Memory Networks](https://openaccess.thecvf.com/content_ICCV_2019/html/Oh_Video_Object_Segmentation_Using_Space-Time_Memory_Networks_ICCV_2019_paper.html)
-![image](https://user-images.githubusercontent.com/19390123/115352733-495a3580-a1ea-11eb-9fed-483cac699682.png){:width="500px" height="300px"}
+![image](https://user-images.githubusercontent.com/19390123/115352733-495a3580-a1ea-11eb-9fed-483cac699682.png){:width="300px" height="200px"}
 
 https://user-images.githubusercontent.com/19390123/115355688-7cea8f00-a1ed-11eb-874d-36840ed833a4.mp4
 

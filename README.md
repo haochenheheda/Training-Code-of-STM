@@ -1,5 +1,5 @@
 # STM_training
-This repository fully reproduces this work: [Space-Time Memory Networks](https://openaccess.thecvf.com/content_ICCV_2019/html/Oh_Video_Object_Segmentation_Using_Space-Time_Memory_Networks_ICCV_2019_paper.html)
+This repository fully reproduces [Space-Time Memory Networks](https://openaccess.thecvf.com/content_ICCV_2019/html/Oh_Video_Object_Segmentation_Using_Space-Time_Memory_Networks_ICCV_2019_paper.html)
 
 ## Introduction
 
@@ -17,7 +17,11 @@ This repository fully reproduces this work: [Space-Time Memory Networks](https:/
 ## Datasets
 
 #### [MS-COCO](https://cocodataset.org/#home)
+We use MS-COCO's instance segmentation part to generate pseudo video sequence. Specifically, we cut out the objects in one image and paste them on another one. Then we perform different affine transformations on the foreground objects and the background image.
+(image)
+
 #### [DAVIS](https://davischallenge.org/)
+
 #### [Youtube-VOS](https://youtube-vos.org/)
 
 #### Structure
@@ -59,6 +63,7 @@ python train_davis.py -Ddavis "path to davis" -Dyoutube "path to youtube-vos" -s
 | Ours| resnet-50 | stage 2 | Davis&Youtube-vos | 82.0 | 79.7 | 84.4 | xx |
 
 ## Notes
+Due to time constraints, the code is a bit messy. Questions are welcome.
 
 ## Citing STM
 @inproceedings{oh2019video,

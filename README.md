@@ -1,9 +1,6 @@
 # Training-code-of-STM
 This repository fully reproduces [Space-Time Memory Networks](https://openaccess.thecvf.com/content_ICCV_2019/html/Oh_Video_Object_Segmentation_Using_Space-Time_Memory_Networks_ICCV_2019_paper.html)
 <img style="width:100px;height:50px" src="https://user-images.githubusercontent.com/19390123/115352733-495a3580-a1ea-11eb-9fed-483cac699682.png"  alt="image" align=left />
-https://user-images.githubusercontent.com/19390123/115355688-7cea8f00-a1ed-11eb-874d-36840ed833a4.mp4
-
-
 
 ## Requirements
 - Python >= 3.6
@@ -75,6 +72,9 @@ python eval.py -g "num of gpus" -s "set" -y "year" -D "path to davis" -p "path t
 #e.g.
 python eval.py -g 0 -s val -y 17 -D ../data/davis -p ../davis_weights/davis_youtube_resnet50_799999.pth
 ```
+
+demo video
+https://user-images.githubusercontent.com/19390123/115357395-3007b800-a1ef-11eb-83ca-46ac222bebfe.mp4
 
 ## Performance&Weights
 

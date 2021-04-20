@@ -40,6 +40,7 @@ python dataset/coco.py -Ddavis "path to davis" -Dcoco "path to coco" -o "path to
       |- Youtube-vos
           |- train
           |- valid
+          
       |- Ms-COCO
           |- train2017
           |- annotations

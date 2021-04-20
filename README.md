@@ -63,7 +63,9 @@ python train_davis.py -Ddavis "path to davis" -Dyoutube "path to youtube-vos" -s
 | Ours| resnet-50 | stage 2 | Davis&Youtube-vos | 82.0 | 79.7 | 84.4 | xx |
 
 ## Notes
-Due to time constraints, the code is a bit messy. Questions are welcome.
+- STM is an attention-based implicit matching architecture, which needs large amounts of data for training. The first stage of training is necessary if you want to get better results.
+- Training takes about three days on a single NVIDIA 2080Ti. There is no log during training stage, you could add logs at your wish. 
+- Due to time constraints, the code is a bit messy. Questions are welcome.
 
 ## Citing STM
 @inproceedings{oh2019video,

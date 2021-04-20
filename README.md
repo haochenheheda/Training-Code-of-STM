@@ -73,8 +73,6 @@ python eval.py -g "num of gpus" -s "set" -y "year" -D "path to davis" -p "path t
 python eval.py -g 0 -s val -y 17 -D ../data/davis -p ../davis_weights/davis_youtube_resnet50_799999.pth
 ```
 
-demo video
-![video](https://user-images.githubusercontent.com/19390123/115357395-3007b800-a1ef-11eb-83ca-46ac222bebfe.mp4)
 
 ## Performance&Weights
 

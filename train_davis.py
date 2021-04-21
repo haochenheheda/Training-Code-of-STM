@@ -37,10 +37,12 @@ def get_arguments():
     parser.add_argument("-max_skip", type=int, help="max skip between training frames",default=25)
     parser.add_argument("-change_skip_step", type=int, help="change max skip per x iter",default=3000)
     parser.add_argument("-total_iter", type=int, help="total iter num",default=800000)
-    parser.add_argument("-test_iter", type=int, help="evaluat per x iters",default=5000)
+    parser.add_argument("-test_iter", type=int, help="evaluate per x iters",default=10000)
+    parser.add_argument("-log_iter", type=int, help="log per x iters",default=500)
     parser.add_argument("-resume_path",type=str,default='/smart/haochen/cvpr/weights/coco_pretrained_resnet50_679999.pth')
     parser.add_argument("-save",type=str,default='../weights')
     parser.add_argument("-sample_rate",type=float,default=0.08)
+
     return parser.parse_args()
 
 args = get_arguments()
@@ -93,22 +95,20 @@ def adjust_learning_rate(iteration,power = 0.9):
 
 accumulation_step = args.batch
 save_step = args.test_iter
+log_iter = args.log_iter
 
-loss_all = 0
+loss_momentum = 0
 change_skip_step = args.change_skip_step
 max_skip = 25
 skip_n = 0
 max_jf = 0
 
 for iter_ in range(args.total_iter):
-	# if (iter_+1)%10000 == 0:
-	# 	print(iter_)
 
 	if (iter_ + 1) % 1000 == 0:
 		lr = adjust_learning_rate(iter_)
 		for param_group in optimizer.param_groups:
 			param_group["lr"] = lr
-			# print('-----------learning rate', param_group["lr"])
 
 	if (iter_ + 1) % change_skip_step == 0:
 		if skip_n < max_skip:
@@ -160,11 +160,16 @@ for iter_ in range(args.total_iter):
 	loss = n2_loss + n3_loss
 	# loss = loss / accumulation_step
 	loss.backward()
-	loss_all += loss.cpu().data.numpy()
+	loss_momentum += loss.cpu().data.numpy()
+
 
 	if (iter_+1) % accumulation_step == 0:
 		optimizer.step()
 		optimizer.zero_grad()
+
+	if (iter_+1) % log_iter == 0:
+		print('iteration:{}, loss:{}, remaining iteration:{}'.format(iter_,loss_momentum/log_iter, args.total_iter - iter_))
+		loss_momentum = 0
 
 
 	if (iter_+1) % save_step == 0 and (iter_+1) >= 600000:

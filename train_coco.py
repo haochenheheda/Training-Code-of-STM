@@ -37,6 +37,7 @@ def get_arguments():
     parser.add_argument("-change_skip_step", type=int, help="change max skip per x iter",default=3000)
     parser.add_argument("-total_iter", type=int, help="total iter num",default=800000)
     parser.add_argument("-test_iter", type=int, help="evaluat per x iters",default=20000)
+    parser.add_argument("-log_iter", type=int, help="log per x iters",default=500)
     parser.add_argument("-save",type=str,default='../weights')
     return parser.parse_args()
 
@@ -76,15 +77,15 @@ optimizer = torch.optim.Adam(model.parameters(),lr = 1e-5,eps=1e-8, betas=[0.9,0
 
 accumulation_step = args.batch
 save_step = args.test_iter
+log_iter = args.log_iter
 
+loss_momentum = 0
 change_skip_step = args.change_skip_step
 max_skip = 25
 skip_n = 0
 max_jf = 0
 
 for iter_ in range(args.total_iter):
-	# if (iter_+1)%10000 == 0:
-	# 	print(iter_)
 
 	try:
 		Fs, Ms, num_objects, info = next(loader_iter1)
@@ -121,10 +122,15 @@ for iter_ in range(args.total_iter):
 	loss = n2_loss + n3_loss
 	# loss = loss / accumulation_step
 	loss.backward()
+	loss_momentum += loss.cpu().data.numpy()
 
 	if (iter_+1) % accumulation_step == 0:
 		optimizer.step()
 		optimizer.zero_grad()
+
+	if (iter_+1) % log_iter == 0:
+		print('iteration:{}, loss:{}, remaining iteration:{}'.format(iter_,loss_momentum/log_iter, args.total_iter - iter_))
+		loss_momentum = 0
 
 	if (iter_+1) % save_step == 0 and (iter_+1) >= 300000:
 		if not os.path.exists(args.save):

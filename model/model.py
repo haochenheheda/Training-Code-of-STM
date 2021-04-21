@@ -19,12 +19,15 @@ import argparse
 import copy
 import sys
 
+from resnest.torch import resnest101
 from utils.helpers import *
  
- 
+
+
 class ResBlock(nn.Module):
-    def __init__(self, indim, outdim=None, stride=1):
+    def __init__(self, backbone, indim, outdim=None, stride=1):
         super(ResBlock, self).__init__()
+        self.backbone = backbone
         if outdim == None:
             outdim = indim
         if indim == outdim and stride==1:
@@ -37,21 +40,35 @@ class ResBlock(nn.Module):
  
  
     def forward(self, x):
-        r = self.conv1(F.relu(x))
-        r = self.conv2(F.relu(r))
- 
+        if self.backbone == 'resnest101':
+            r = self.conv1(F.relu(x,inplace=True))
+            r = self.conv2(F.relu(r,inplace=True))
+        else:
+            r = self.conv1(F.relu(x))
+            r = self.conv2(F.relu(r))
+
         if self.downsample is not None:
             x = self.downsample(x)
          
         return x + r 
 
 class Encoder_M(nn.Module):
-    def __init__(self):
+    def __init__(self,backbone):
         super(Encoder_M, self).__init__()
-        self.conv1_m = nn.Conv2d(1, 64, kernel_size=7, stride=2, padding=3, bias=False)
-        self.conv1_o = nn.Conv2d(1, 64, kernel_size=7, stride=2, padding=3, bias=False)
+        if backbone == 'resnest101':
+            self.conv1_m = nn.Conv2d(1, 128, kernel_size=7, stride=2, padding=3, bias=False)
+            self.conv1_o = nn.Conv2d(1, 128, kernel_size=7, stride=2, padding=3, bias=False)
+        else:
+            self.conv1_m = nn.Conv2d(1, 64, kernel_size=7, stride=2, padding=3, bias=False)
+            self.conv1_o = nn.Conv2d(1, 64, kernel_size=7, stride=2, padding=3, bias=False)
 
-        resnet = models.resnet50(pretrained=True)
+        if backbone == 'resnet50':
+            resnet = models.resnet50(pretrained=True)
+        elif backbone == 'resnet18':
+            resnet = models.resnet18(pretrained=True)
+        elif backbone == 'resnest101':
+            resnet = resnest101()
+
         self.conv1 = resnet.conv1
         self.bn1 = resnet.bn1
         self.relu = resnet.relu  # 1/2, 64
@@ -79,9 +96,16 @@ class Encoder_M(nn.Module):
         return r4, r3, r2, c1, f
  
 class Encoder_Q(nn.Module):
-    def __init__(self):
+    def __init__(self, backbone):
         super(Encoder_Q, self).__init__()
-        resnet = models.resnet50(pretrained=True)
+
+        if backbone == 'resnet50':
+            resnet = models.resnet50(pretrained=True)
+        elif backbone == 'resnet18':
+            resnet = models.resnet18(pretrained=True)
+        elif backbone == 'resnest101':
+            resnet = resnest101()
+
         self.conv1 = resnet.conv1
         self.bn1 = resnet.bn1
         self.relu = resnet.relu  # 1/2, 64
@@ -108,11 +132,11 @@ class Encoder_Q(nn.Module):
 
 
 class Refine(nn.Module):
-    def __init__(self, inplanes, planes, scale_factor=2):
+    def __init__(self, backbone, inplanes, planes, scale_factor=2):
         super(Refine, self).__init__()
         self.convFS = nn.Conv2d(inplanes, planes, kernel_size=(3,3), padding=(1,1), stride=1)
-        self.ResFS = ResBlock(planes, planes)
-        self.ResMM = ResBlock(planes, planes)
+        self.ResFS = ResBlock(backbone,planes, planes)
+        self.ResMM = ResBlock(backbone,planes, planes)
         self.scale_factor = scale_factor
 
     def forward(self, f, pm):
@@ -122,26 +146,62 @@ class Refine(nn.Module):
         return m
 
 class Decoder(nn.Module):
-    def __init__(self, mdim):
+    def __init__(self, mdim,scale_rate,backbone):
         super(Decoder, self).__init__()
-        self.convFM = nn.Conv2d(1024, mdim, kernel_size=(3,3), padding=(1,1), stride=1)
-        self.ResMM = ResBlock(mdim, mdim)
-        self.RF3 = Refine(512, mdim) # 1/8 -> 1/4
-        self.RF2 = Refine(256, mdim) # 1/4 -> 1
+        self.backbone = backbone
+        if backbone == 'resnest101':
+            self.convFM = nn.Conv2d(256, mdim, kernel_size=(3,3), padding=(1,1), stride=1)
+        else:
+            self.convFM = nn.Conv2d(1024//scale_rate, mdim, kernel_size=(3,3), padding=(1,1), stride=1)
+        self.ResMM = ResBlock(backbone,mdim, mdim)
+        self.RF3 = Refine(backbone, 512//scale_rate, mdim) # 1/8 -> 1/4
+        self.RF2 = Refine(backbone, 256//scale_rate, mdim) # 1/4 -> 1
 
         self.pred2 = nn.Conv2d(mdim, 2, kernel_size=(3,3), padding=(1,1), stride=1)
+
 
     def forward(self, r4, r3, r2):
         m4 = self.ResMM(self.convFM(r4))
         m3 = self.RF3(r3, m4) # out: 1/8, 256
         m2 = self.RF2(r2, m3) # out: 1/4, 256
 
-        p2 = self.pred2(F.relu(m2))
+        if self.backbone == 'resnest101':
+            p2 = self.pred2(F.relu(m2,inplace=True))
+        else:
+            p2 = self.pred2(F.relu(m2))
         
         p = F.interpolate(p2, scale_factor=4, mode='bilinear', align_corners=False)
         return p #, p2, p3, p4
 
+class _ASPPModule(nn.Module):
+    def __init__(self, inplanes, planes, kernel_size, padding, dilation):
+        super(_ASPPModule, self).__init__()
+        self.atrous_conv = nn.Conv2d(inplanes, planes, kernel_size=kernel_size,
+                                            stride=1, padding=padding, dilation=dilation, bias=False)
 
+    def forward(self, x):
+        x = self.atrous_conv(x)
+        return F.relu(x,inplace=True)
+
+class ASPP(nn.Module):
+    def __init__(self):
+        super(ASPP, self).__init__()
+        dilations = [1, 2, 4, 8]
+
+        self.aspp1 = _ASPPModule(1024, 256, 1, padding=0, dilation=dilations[0])
+        self.aspp2 = _ASPPModule(1024, 256, 3, padding=dilations[1], dilation=dilations[1])
+        self.aspp3 = _ASPPModule(1024, 256, 3, padding=dilations[2], dilation=dilations[2])
+        self.aspp4 = _ASPPModule(1024, 256, 3, padding=dilations[3], dilation=dilations[3])
+        self.conv1 = nn.Conv2d(1024, 256, 1, bias=False)
+
+    def forward(self, x):
+        x1 = self.aspp1(x)
+        x2 = self.aspp2(x)
+        x3 = self.aspp3(x)
+        x4 = self.aspp4(x)
+        x = torch.cat((x1, x2, x3, x4), dim=1)
+        x = self.conv1(x)
+        return F.dropout(F.relu(x,inplace = True),p = 0.5,training=self.training)   
 
 class Memory(nn.Module):
     def __init__(self):
@@ -182,16 +242,22 @@ class KeyValue(nn.Module):
 
 
 class STM(nn.Module):
-    def __init__(self):
+    def __init__(self,backbone = 'resnet50'):
         super(STM, self).__init__()
-        self.Encoder_M = Encoder_M() 
-        self.Encoder_Q = Encoder_Q() 
+        self.backbone = backbone
+        assert backbone == 'resnet50' or backbone == 'resnet18' or backbone == 'resnest101'
+        scale_rate = (1 if (backbone == 'resnet50' or backbone == 'resnest101') else 4)
 
-        self.KV_M_r4 = KeyValue(1024, keydim=128, valdim=512)
-        self.KV_Q_r4 = KeyValue(1024, keydim=128, valdim=512)
+        self.Encoder_M = Encoder_M(backbone) 
+        self.Encoder_Q = Encoder_Q(backbone) 
+
+        self.KV_M_r4 = KeyValue(1024//scale_rate, keydim=128//scale_rate, valdim=512//scale_rate)
+        self.KV_Q_r4 = KeyValue(1024//scale_rate, keydim=128//scale_rate, valdim=512//scale_rate)
 
         self.Memory = Memory()
-        self.Decoder = Decoder(256)
+        self.Decoder = Decoder(256,scale_rate,backbone)
+        if backbone == 'resnest101':
+            self.aspp = ASPP()
  
     def Pad_memory(self, mems, num_objects, K):
         pad_mems = []
@@ -250,6 +316,8 @@ class STM(nn.Module):
         
         # memory select kv:(1, K, C, T, H, W)
         m4, viz = self.Memory(keys[0,1:num_objects+1], values[0,1:num_objects+1], k4e, v4e)
+        if self.backbone == 'resnest101':
+            m4 = self.aspp(m4)
         logits = self.Decoder(m4, r3e, r2e)
         ps = F.softmax(logits, dim=1)[:,1] # no, h, w  
         #ps = indipendant possibility to belong to each object

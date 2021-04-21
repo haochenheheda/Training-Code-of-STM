@@ -153,7 +153,8 @@ if __name__ == "__main__":
         parser.add_argument("-s", type=str, help="set", required=True)
         parser.add_argument("-y", type=int, help="year", required=True)
         parser.add_argument("-D", type=str, help="path to data",default='/smart/haochen/cvpr/data/DAVIS/')
-        parser.add_argument("-p", type=str, help="path to weights",default='/smart/haochen/cvpr/weights/resnet50_679999.pth')
+        parser.add_argument("-backbone", type=str, help="backbone ['resnet50', 'resnet18','resnest101']",default='resnet50')
+        parser.add_argument("-p", type=str, help="path to weights",default='/smart/haochen/cvpr/weights/davis_youtube_resnet50_799999.pth')
         return parser.parse_args()
 
     args = get_arguments()
@@ -172,7 +173,7 @@ if __name__ == "__main__":
         print('using Cuda devices, num:', torch.cuda.device_count())
 
     Testloader = DAVIS_MO_Test(DATA_ROOT, resolution='480p', imset='20{}/{}.txt'.format(YEAR,SET), single_object=(YEAR==16))
-    model = nn.DataParallel(STM())
+    model = nn.DataParallel(STM(args.backbone))
     if torch.cuda.is_available():
         model.cuda()
     model.eval()

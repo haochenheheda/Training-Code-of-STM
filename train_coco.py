@@ -39,6 +39,7 @@ def get_arguments():
     parser.add_argument("-test_iter", type=int, help="evaluat per x iters",default=20000)
     parser.add_argument("-log_iter", type=int, help="log per x iters",default=500)
     parser.add_argument("-save",type=str,default='../weights')
+    parser.add_argument("-backbone", type=str, help="backbone ['resnet50', 'resnet18']",default='resnet50')
     return parser.parse_args()
 
 args = get_arguments()
@@ -58,7 +59,7 @@ loader_iter1 = iter(Trainloader1)
 Testloader = DAVIS_MO_Test(DAVIS_ROOT, resolution='480p', imset='20{}/{}.txt'.format(17,'val'), single_object=False)
 
 
-model = nn.DataParallel(STM())
+model = nn.DataParallel(STM(args.backbone))
 
 if torch.cuda.is_available():
     model.cuda()
@@ -135,7 +136,7 @@ for iter_ in range(args.total_iter):
 	if (iter_+1) % save_step == 0 and (iter_+1) >= 300000:
 		if not os.path.exists(args.save):
 			os.makedirs(args.save)	
-		torch.save(model.state_dict(), os.path.join(args.save,'coco_pretrained_resnet50_' + str(iter_) + '.pth'))
+		torch.save(model.state_dict(), os.path.join(args.save,'coco_pretrained_{}_{}.pth'.format(args.backbone, iter_)))
 
 		model.eval()
 

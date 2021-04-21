@@ -42,6 +42,7 @@ def get_arguments():
     parser.add_argument("-resume_path",type=str,default='/smart/haochen/cvpr/weights/coco_pretrained_resnet50_679999.pth')
     parser.add_argument("-save",type=str,default='../weights')
     parser.add_argument("-sample_rate",type=float,default=0.08)
+    parser.add_argument("-backbone", type=str, help="backbone ['resnet50', 'resnet18']",default='resnet50')
 
     return parser.parse_args()
 
@@ -66,7 +67,7 @@ loader_iter1 = iter(Trainloader1)
 Testloader = DAVIS_MO_Test(DATA_ROOT, resolution='480p', imset='20{}/{}.txt'.format(17,'val'), single_object=False)
 
 
-model = nn.DataParallel(STM())
+model = nn.DataParallel(STM(args.backbone))
 pth_path = args.resume_path
 
 print('Loading weights:', pth_path)
@@ -175,7 +176,7 @@ for iter_ in range(args.total_iter):
 	if (iter_+1) % save_step == 0 and (iter_+1) >= 600000:
 		if not os.path.exists(args.save):
 			os.makedirs(args.save)
-		torch.save(model.state_dict(), os.path.join(args.save,'davis_youtube_resnet50_' + str(iter_) + '.pth'))
+		torch.save(model.state_dict(), os.path.join(args.save,'davis_youtube_{}_{}.pth'.format(args.backbone,str(iter_))))
 		
 		model.eval()
 		

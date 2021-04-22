@@ -66,7 +66,7 @@ python demo.py -g "num of gpus" -s "set" -y "year" -D "path to davis" -p "path t
 python demo.py -g 0 -s val -y 17 -D ../data/Davis/ -p /smart/haochen/cvpr/0628_resnest_aspp/davis_youtube_resnest101_699999.pth -backbone resnest101
 ```
 
-![demo_video](https://user-images.githubusercontent.com/19390123/115709216-861d5c80-a3a3-11eb-9fd3-004179aa2a8b.mp4)
+https://user-images.githubusercontent.com/19390123/115709216-861d5c80-a3a3-11eb-9fd3-004179aa2a8b.mp4
 
 
 ## Training

@@ -61,7 +61,7 @@ python dataset/coco.py -Ddavis "path to davis" -Dcoco "path to coco" -o "path to
 
 ## Demo
 ```
-python demo.py -g "num of gpus" -s "set" -y "year" -D "path to davis" -p "path to weights" -backbone "[resnet50,resnet18,resnest101]"
+python demo.py -g "gpu id" -s "set" -y "year" -D "path to davis" -p "path to weights" -backbone "[resnet50,resnet18,resnest101]"
 #e.g.
 python demo.py -g 0 -s val -y 17 -D ../data/Davis/ -p /smart/haochen/cvpr/0628_resnest_aspp/davis_youtube_resnest101_699999.pth -backbone resnest101
 ```
@@ -90,7 +90,7 @@ train_davis.py -Ddavis ../data/Davis/ -Dyoutube ../data/Youtube-vos/ -backbone r
 ## Evaluation
 Evaluating on Davis 2017&2016 val set.
 ```
-python eval.py -g "num of gpus" -s "set" -y "year" -D "path to davis" -p "path to weights" -backbone "[resnet50,resnet18,resnest101]"
+python eval.py -g "gpu id" -s "set" -y "year" -D "path to davis" -p "path to weights" -backbone "[resnet50,resnet18,resnest101]"
 #e.g.
 python eval.py -g 0 -s val -y 17 -D ../data/davis -p ../davis_weights/davis_youtube_resnet50_799999.pth -backbone resnet50
 python eval.py -g 0 -s val -y 17 -D ../data/davis -p ../davis_weights/davis_youtube_resnest101_699999.pth -backbone resnest101

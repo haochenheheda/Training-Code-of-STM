@@ -56,7 +56,7 @@ def overlay_davis(image,mask,colors=[255,0,0],cscale=2,alpha=0.4):
     from scipy.ndimage.morphology import binary_erosion, binary_dilation
 
     colors = np.reshape(colors, (-1, 3))
-    colors = np.atleast_2d(colors) * cscale
+    #colors = np.atleast_2d(colors) * cscale
 
     im_overlay = image.copy()
     object_ids = np.unique(mask)
